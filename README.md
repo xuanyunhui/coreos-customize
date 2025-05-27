@@ -38,9 +38,15 @@
 
 默认标签为 `custom-coreos:latest`。
 
+构建脚本会自动检测系统中是否安装了podman，如果检测到podman则优先使用podman进行构建，否则使用docker。
+
 ### 运行容器
 
+取决于使用的容器引擎，使用以下命令之一：
+
 ```bash
+podman run -it custom-coreos:latest
+# 或
 docker run -it custom-coreos:latest
 ```
 
