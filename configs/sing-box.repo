@@ -1,6 +1,7 @@
 [sing-box]
-name=Sing-Box Repository
-baseurl=https://sing-box.app/repository/rpm/
+name=sing-box
+baseurl=https://rpm.sagernet.org/
 enabled=1
+repo_gpgcheck=1
 gpgcheck=1
-gpgkey=https://sing-box.app/sing-box.asc 
+gpgkey=https://sing-box.app/gpg.key

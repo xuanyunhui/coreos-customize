@@ -16,4 +16,4 @@ packages:
   - mesa-vulkan-drivers 
   - vulkan-loader 
   - vulkan-tools
-  - sing-box #https://sing-box.app/sing-box.repo
+  - sing-box
