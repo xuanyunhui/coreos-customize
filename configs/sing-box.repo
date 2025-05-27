@@ -1,0 +1,6 @@
+[sing-box]
+name=Sing-Box Repository
+baseurl=https://sing-box.app/repository/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://sing-box.app/sing-box.asc 
