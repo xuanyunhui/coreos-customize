@@ -1,0 +1,19 @@
+override-remove:
+  - moby-engine
+  - moby-filesystem
+  - containerd
+  - docker-cli
+  - zincati
+  - nano
+  - nano-default-editor
+packages:
+  - container-selinux
+  - pciutils
+  - usbutils
+  - vim-default-editor
+  - screen
+  - tree
+  - mesa-vulkan-drivers 
+  - vulkan-loader 
+  - vulkan-tools
+  - sing-box #https://sing-box.app/sing-box.repo
