@@ -36,20 +36,12 @@
 ### 本地构建镜像
 
 ```bash
-# 基本用法
 ./scripts/build.sh [TAG]
-
-# 使用特权模式构建（解决某些环境中的构建问题）
-./scripts/build.sh [TAG] true
 ```
 
 默认标签为 `custom-coreos:latest`。
 
 构建脚本会自动检测系统中是否安装了podman，如果检测到podman则优先使用podman进行构建，否则使用docker。
-
-#### 特权模式说明
-
-在某些环境中（例如CI/CD系统），构建可能会失败，出现错误如 `error: Preparing filesystem for scripts: Invalid argument (os error 22)`。这通常是由于容器运行时权限不足导致的。使用特权模式构建可以解决这个问题。
 
 ### 自动构建（GitHub Actions）
 
