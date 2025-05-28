@@ -45,7 +45,7 @@
 
 ### 自动构建（GitHub Actions）
 
-本项目配置了GitHub Actions自动构建流程。当满足以下条件时会触发自动构建：
+本项目配置了GitHub Actions自动构建流程，使用Red Hat的Buildah工具进行构建。当满足以下条件时会触发自动构建：
 
 1. 向`main`分支推送修改，且修改涉及`configs/`目录或`Dockerfile`
 2. 创建Pull Request到`main`分支
