@@ -29,6 +29,23 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v3
       
+      - name: 设置QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: arm64
+      
+      - name: 安装qemu-user-static
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+          sudo podman run --rm --privileged docker.io/tonistiigi/binfmt --install all
+      
+      - name: 显示系统信息
+        run: |
+          uname -a
+          podman --version
+          buildah --version
+      
       - name: 安装Buildah
         id: buildah
         uses: redhat-actions/buildah-build@v2
@@ -38,9 +55,11 @@ jobs:
           containerfiles: |
             ./Dockerfile
           platforms: linux/arm64
-          build-args: |
-            BUILDAH_FORMAT=docker
-
+          layers: true
+          oci: true
+          extra-args: |
+            --log-level debug
+      
       - name: 登录到GitHub容器注册表
         if: github.event_name != 'pull_request'
         uses: redhat-actions/podman-login@v1
