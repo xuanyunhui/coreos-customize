@@ -12,5 +12,4 @@ RUN cat /etc/os-release \
     && rm -rf /var/lib \
     && rpm-ostree cleanup -m \
     && systemctl preset-all \
-    && ostree config --repo=/sysroot/ostree/repo set deploy.composefs false \
     && ostree container commit 
