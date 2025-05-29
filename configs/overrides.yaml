@@ -19,3 +19,4 @@ packages:
   - sing-box
   - bird
   - bind-utils
+  - python3-requests
