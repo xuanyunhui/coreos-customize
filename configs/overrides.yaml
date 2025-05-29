@@ -17,3 +17,5 @@ packages:
   - vulkan-loader 
   - vulkan-tools
   - sing-box
+  - bird
+  - bind-utils
