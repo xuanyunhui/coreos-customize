@@ -20,3 +20,4 @@ packages:
   - bird
   - bind-utils
   - python3-requests
+  - python3-virtualenvwrapper
