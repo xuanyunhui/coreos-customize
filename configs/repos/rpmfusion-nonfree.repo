@@ -6,7 +6,7 @@ enabled=1
 enabled_metadata=1
 metadata_expire=14d
 type=rpm-md
-gpgcheck=1
+gpgcheck=0
 repo_gpgcheck=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-$releasever
 
@@ -17,7 +17,7 @@ metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-debug-$relea
 enabled=0
 metadata_expire=7d
 type=rpm-md
-gpgcheck=1
+gpgcheck=0
 repo_gpgcheck=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-$releasever
 
@@ -28,7 +28,7 @@ metalink=https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-source-$rele
 enabled=0
 metadata_expire=7d
 type=rpm-md
-gpgcheck=1
+gpgcheck=0
 repo_gpgcheck=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-$releasever
 
