@@ -13,7 +13,11 @@ packages:
   - vim-default-editor
   - screen
   - tree
-  - mesa-vulkan-drivers 
+  - mesa-dri-drivers
+  - mesa-libOpenCL
+  - OpenCL-ICD-Loader
+  - mesa-vulkan-drivers-freeworld
+  - clinfo
   - vulkan-loader 
   - vulkan-tools
   - sing-box
