@@ -21,3 +21,6 @@ packages:
   - bind-utils
   - python3-requests
   - python3-virtualenvwrapper
+  - python3.12
+  - python3.12-libs
+  - python3.12-devel
