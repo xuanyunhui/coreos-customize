@@ -1,7 +1,7 @@
 FROM quay.io/fedora/fedora-coreos:stable
 
 # 添加配置文件
-ADD configs/repos/overrides.yaml /etc/rpm-ostree/origin.d/overrides.yaml
+ADD configs/overrides.yaml /etc/rpm-ostree/origin.d/overrides.yaml
 ADD configs/repos/rpmfusion-free.repo /etc/yum.repos.d/rpmfusion-free.repo
 ADD configs/repos/rpmfusion-free-updates.repo /etc/yum.repos.d/rpmfusion-free-updates.repo
 ADD configs/repos/rpmfusion-nonfree.repo /etc/yum.repos.d/rpmfusion-nonfree.repo
