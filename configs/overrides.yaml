@@ -16,7 +16,7 @@ packages:
   - mesa-dri-drivers
   - mesa-libOpenCL
   - OpenCL-ICD-Loader
-  - mesa-vulkan-drivers-freeworld
+  - mesa-vulkan-drivers
   - clinfo
   - vulkan-loader 
   - vulkan-tools
