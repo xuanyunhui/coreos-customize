@@ -7,17 +7,17 @@ override-remove:
   - nano
   - nano-default-editor
 packages:
+  - kernel
+  - kernel-core
+  - kernel-modules
+  - kernel-modules-core
   - container-selinux
   - pciutils
   - usbutils
   - vim-default-editor
   - screen
   - tree
-  - mesa-dri-drivers
-  - mesa-libOpenCL
-  - OpenCL-ICD-Loader
   - mesa-vulkan-drivers
-  - clinfo
   - vulkan-loader 
   - vulkan-tools
   - sing-box
@@ -25,6 +25,3 @@ packages:
   - bind-utils
   - python3-requests
   - python3-virtualenvwrapper
-  - python3.12
-  - python3.12-libs
-  - python3.12-devel
