@@ -7,10 +7,6 @@ override-remove:
   - nano
   - nano-default-editor
 packages:
-  - kernel
-  - kernel-core
-  - kernel-modules
-  - kernel-modules-core
   - container-selinux
   - pciutils
   - usbutils
@@ -25,3 +21,4 @@ packages:
   - bind-utils
   - python3-requests
   - python3-virtualenvwrapper
+  - nodejs-npm
