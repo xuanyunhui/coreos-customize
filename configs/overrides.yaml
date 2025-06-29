@@ -32,3 +32,4 @@ packages:
   - make
   - unzip
   - zip
+  - musl-libc
