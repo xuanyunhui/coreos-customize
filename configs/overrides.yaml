@@ -30,3 +30,4 @@ packages:
   - llvm
   - cmake
   - make
+  - unzip
