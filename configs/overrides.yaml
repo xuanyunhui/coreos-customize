@@ -24,7 +24,7 @@ packages:
   - zsh
   - java-latest-openjdk
   - java-latest-openjdk-devel
-  - golangq
+  - golang
   - nodejs-npm
   - clang
   - llvm
