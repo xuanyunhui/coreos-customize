@@ -22,4 +22,11 @@ packages:
   - python3-requests
   - python3-virtualenvwrapper
   - zsh
+  - java-latest-openjdk
+  - java-latest-openjdk-devel
+  - golangq
   - nodejs-npm
+  - clang
+  - llvm
+  - cmake
+  - make
