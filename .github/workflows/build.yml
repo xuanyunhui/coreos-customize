@@ -10,6 +10,8 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:  # 允许手动触发
+  schedule:
+    - cron: '0 21 * * 1-5'    # 每周一到周五，UTC 21:00（吉隆坡次日凌晨5点）
 
 env:
   # 定义镜像名称和版本
