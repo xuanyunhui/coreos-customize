@@ -21,6 +21,8 @@ packages:
   - bind-utils
   - python3-requests
   - python3-virtualenvwrapper
+  - python3.13-devel
+  - python3.12-devel
   - zsh
   - java-latest-openjdk
   - java-latest-openjdk-devel
