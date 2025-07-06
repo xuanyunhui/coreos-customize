@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora-coreos:rawhide
+FROM quay.io/fedora/fedora-coreos:stable
 
 # 添加配置文件
 ADD configs/overrides.yaml /etc/rpm-ostree/origin.d/overrides.yaml
