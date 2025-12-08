@@ -11,7 +11,8 @@ packages:
   - podman-docker
   - pciutils
   - usbutils
-  - vim-default-editor
+  # - vim-default-editor
+  # - vim-data
   - screen
   - tree
   - mesa-vulkan-drivers
@@ -22,8 +23,8 @@ packages:
   - bind-utils
   - python3-requests
   - python3-virtualenvwrapper
-  - python3.13-devel
-  - python3.12-devel
+  # - python3.13-devel
+  - python3-devel
   - zsh
   - java-latest-openjdk
   - java-latest-openjdk-devel
