@@ -14,6 +14,7 @@ packages:
   # - vim-default-editor
   # - vim-data
   - screen
+  - tftp-server
   - tree
   - mesa-vulkan-drivers
   - vulkan-loader 
