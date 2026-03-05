@@ -23,11 +23,13 @@ jobs:
       - name: 获取最新支持 arm64 的 tag
         id: get_tag
         run: |
+          FVER=$(grep -oP 'fedora-coreos:\K\d+' Dockerfile)
           LATEST=$(skopeo list-tags docker://quay.io/fedora/fedora-coreos | \
             python3 -c "
-          import json, sys, re, subprocess
+          import json, sys, re, subprocess, os
+          fver = os.environ['FVER']
           tags = json.load(sys.stdin)['Tags']
-          pattern = re.compile(r'^44\.\d+\.\d+\.\d+$')
+          pattern = re.compile(rf'^{re.escape(fver)}\.\d+\.\d+\.\d+$')
           candidates = sorted(
               [t for t in tags if pattern.match(t)],
               key=lambda t: [int(x) for x in t.split('.')],
@@ -35,15 +37,23 @@ jobs:
           )
           for tag in candidates:
               r = subprocess.run(
-                  ['skopeo', 'inspect', '--override-arch', 'arm64',
+                  ['skopeo', 'inspect', '--raw',
                    f'docker://quay.io/fedora/fedora-coreos:{tag}'],
                   capture_output=True
               )
-              if r.returncode == 0:
+              if r.returncode != 0:
+                  continue
+              try:
+                  data = json.loads(r.stdout)
+              except json.JSONDecodeError:
+                  continue
+              archs = [m.get('platform', {}).get('architecture')
+                       for m in data.get('manifests', [])]
+              if 'arm64' in archs:
                   print(tag)
                   sys.exit(0)
-          raise SystemExit('ERROR: No F44 arm64-compatible tag found')
-          ")
+          raise SystemExit(f'ERROR: No F{fver} arm64-compatible tag found')
+          " FVER="$FVER")
           echo "latest=${LATEST}" >> "$GITHUB_OUTPUT"
 
       - name: 获取当前 Dockerfile tag
@@ -69,7 +79,12 @@ jobs:
         if: steps.get_tag.outputs.latest != steps.current_tag.outputs.current
         env:
           LATEST: ${{ steps.get_tag.outputs.latest }}
+          # AUTO_UPDATE_TOKEN 需在仓库 Settings → Secrets → Actions 中手动创建
+          # 该 PAT 需具备 contents: write 权限
+          # 使用 PAT 推送使 GitHub 将本次 commit 视为普通用户操作，从而触发 build.yml
+          GH_TOKEN: ${{ secrets.AUTO_UPDATE_TOKEN }}
         run: |
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add Dockerfile
