@@ -27,7 +27,7 @@ jobs:
             python3 -c "
           import json, sys, re, subprocess
           tags = json.load(sys.stdin)['Tags']
-          pattern = re.compile(r'^\d+\.\d+\.\d+\.\d+$')
+          pattern = re.compile(r'^44\.\d+\.\d+\.\d+$')
           candidates = sorted(
               [t for t in tags if pattern.match(t)],
               key=lambda t: [int(x) for x in t.split('.')],
@@ -42,7 +42,7 @@ jobs:
               if r.returncode == 0:
                   print(tag)
                   sys.exit(0)
-          raise SystemExit('ERROR: No arm64-compatible tag found')
+          raise SystemExit('ERROR: No F44 arm64-compatible tag found')
           ")
           echo "latest=${LATEST}" >> "$GITHUB_OUTPUT"
 
