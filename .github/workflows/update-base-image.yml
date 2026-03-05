@@ -20,19 +20,29 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: 获取最新 F45 tag
+      - name: 获取最新支持 arm64 的 tag
         id: get_tag
         run: |
           LATEST=$(skopeo list-tags docker://quay.io/fedora/fedora-coreos | \
             python3 -c "
-          import json, sys, re
+          import json, sys, re, subprocess
           tags = json.load(sys.stdin)['Tags']
           pattern = re.compile(r'^\d+\.\d+\.\d+\.\d+$')
-          f45 = [t for t in tags if t.startswith('45.') and pattern.match(t)]
-          if not f45:
-              raise SystemExit('ERROR: No 45.x.x.x numeric tags found in quay.io/fedora/fedora-coreos')
-          latest = sorted(f45, key=lambda t: [int(x) for x in t.split('.')], reverse=True)[0]
-          print(latest)
+          candidates = sorted(
+              [t for t in tags if pattern.match(t)],
+              key=lambda t: [int(x) for x in t.split('.')],
+              reverse=True
+          )
+          for tag in candidates:
+              r = subprocess.run(
+                  ['skopeo', 'inspect', '--override-arch', 'arm64',
+                   f'docker://quay.io/fedora/fedora-coreos:{tag}'],
+                  capture_output=True
+              )
+              if r.returncode == 0:
+                  print(tag)
+                  sys.exit(0)
+          raise SystemExit('ERROR: No arm64-compatible tag found')
           ")
           echo "latest=${LATEST}" >> "$GITHUB_OUTPUT"
 

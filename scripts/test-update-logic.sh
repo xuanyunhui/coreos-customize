@@ -19,37 +19,42 @@ else
     fail "workflow 文件不存在: $WORKFLOW"
 fi
 
-# ── 测试 1：Python 脚本能从 mock JSON 中找到最新 F45 tag ─────────────────────
-MOCK_JSON='{"Tags": ["44.20251224.91.0", "45.20260101.91.0", "45.20260226.91.1", "45.20260115.91.0", "next", "stable"]}'
+# ── 测试 1：Python 排序逻辑能从 mock JSON 中取全局最新版本化 tag ──────────────
+MOCK_JSON='{"Tags": ["44.20251224.91.0", "45.20260101.91.0", "44.20260301.92.1", "45.20260226.91.1", "next", "stable"]}'
 RESULT=$(echo "$MOCK_JSON" | python3 -c "
-import json, sys
+import json, sys, re
 tags = json.load(sys.stdin)['Tags']
-f45 = [t for t in tags if t.startswith('45.')]
-if not f45:
-    raise SystemExit('ERROR: No 45.* tags found')
-latest = sorted(f45, key=lambda t: [int(x) for x in t.split('.')], reverse=True)[0]
-print(latest)
+pattern = re.compile(r'^\d+\.\d+\.\d+\.\d+$')
+candidates = sorted(
+    [t for t in tags if pattern.match(t)],
+    key=lambda t: [int(x) for x in t.split('.')],
+    reverse=True
+)
+if not candidates:
+    raise SystemExit('ERROR: No numeric version tags found')
+# 模拟：取排序后第一个（实际 workflow 中此处还会验证 arm64 可用性）
+print(candidates[0])
 ")
 if [[ "$RESULT" == "45.20260226.91.1" ]]; then
-    pass "Python 排序逻辑：从 mock JSON 找到最新 F45 tag ($RESULT)"
+    pass "Python 排序逻辑：从 mock JSON 取全局最新 tag ($RESULT)"
 else
     fail "Python 排序逻辑：期望 45.20260226.91.1，实际得到 $RESULT"
 fi
 
-# ── 测试 2：Python 脚本在无 45.* tag 时应报错退出 ────────────────────────────
-EMPTY_JSON='{"Tags": ["44.20251224.91.0", "next", "stable"]}'
+# ── 测试 2：Python 脚本在无版本化 tag 时应报错退出 ───────────────────────────
+EMPTY_JSON='{"Tags": ["next", "stable", "testing"]}'
 if echo "$EMPTY_JSON" | python3 -c "
-import json, sys
+import json, sys, re
 tags = json.load(sys.stdin)['Tags']
-f45 = [t for t in tags if t.startswith('45.')]
-if not f45:
-    raise SystemExit('ERROR: No 45.* tags found')
-latest = sorted(f45, key=lambda t: [int(x) for x in t.split('.')], reverse=True)[0]
-print(latest)
+pattern = re.compile(r'^\d+\.\d+\.\d+\.\d+$')
+candidates = [t for t in tags if pattern.match(t)]
+if not candidates:
+    raise SystemExit('ERROR: No numeric version tags found')
+print(candidates[0])
 " 2>/dev/null; then
-    fail "Python 无 45.* tag 场景：应报错退出但未报错"
+    fail "Python 无版本化 tag 场景：应报错退出但未报错"
 else
-    pass "Python 无 45.* tag 场景：正确报错退出"
+    pass "Python 无版本化 tag 场景：正确报错退出"
 fi
 
 # ── 测试 3：grep 能正确从临时 Dockerfile 提取当前 tag ───────────────────────
