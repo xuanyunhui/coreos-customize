@@ -29,10 +29,10 @@ jobs:
     
     steps:
       - name: 检出代码
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: 设置QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64
       
@@ -59,8 +59,6 @@ jobs:
           platforms: linux/arm64
           layers: true
           oci: true
-          extra-args: |
-            --log-level debug
       
       - name: 登录到GitHub容器注册表
         if: github.event_name != 'pull_request'
@@ -78,6 +76,15 @@ jobs:
           tags: ${{ steps.buildah.outputs.tags }}
           registry: ${{ env.REGISTRY }}/${{ github.repository }}
       
+      - name: 清理旧版本镜像
+        if: github.event_name != 'pull_request'
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ env.IMAGE_NAME }}
+          package-type: container
+          min-versions-to-keep: 5
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: 镜像摘要
         run: echo ${{ steps.buildah.outputs.digest }}
         
@@ -86,4 +93,12 @@ jobs:
         run: |
           echo "## 最新构建" >> $GITHUB_STEP_SUMMARY
           echo "镜像已构建并推送到: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}" >> $GITHUB_STEP_SUMMARY
-          echo "构建时间: $(date)" >> $GITHUB_STEP_SUMMARY 
+          echo "构建时间: $(date)" >> $GITHUB_STEP_SUMMARY
+
+      - name: 构建失败摘要
+        if: failure()
+        run: |
+          echo "## ❌ 构建失败" >> $GITHUB_STEP_SUMMARY
+          echo "- 时间: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "- 触发事件: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
