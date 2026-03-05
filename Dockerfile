@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora-coreos:44.20260301.92.1
+FROM quay.io/fedora/fedora-coreos:45.20260225.91.1
 
 # 添加配置文件
 ADD configs/overrides.yaml /etc/rpm-ostree/origin.d/overrides.yaml
