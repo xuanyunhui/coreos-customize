@@ -17,8 +17,15 @@ else
     echo "未检测到podman，将使用docker构建镜像"
 fi
 
+ARCH=$(uname -m)
+PLATFORM_ARGS=""
+if [[ "$ARCH" != "aarch64" ]]; then
+    echo "检测到非 arm64 主机 (${ARCH})，追加 --platform linux/arm64"
+    PLATFORM_ARGS="--platform linux/arm64"
+fi
+
 echo "开始构建自定义CoreOS镜像: $TAG"
-$CONTAINER_ENGINE build -t $TAG .
+$CONTAINER_ENGINE build $PLATFORM_ARGS -t $TAG .
 
 echo "构建完成。您可以使用以下命令运行容器:"
 echo "$CONTAINER_ENGINE run -it $TAG"
