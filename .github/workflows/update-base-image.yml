@@ -5,6 +5,10 @@ on:
     - cron: '0 0 * * 1'  # 每周一 UTC 00:00
   workflow_dispatch:       # 支持手动触发
 
+concurrency:
+  group: update-base-image
+  cancel-in-progress: true
+
 jobs:
   update:
     name: 检测并更新基础镜像
@@ -21,11 +25,12 @@ jobs:
         run: |
           LATEST=$(skopeo list-tags docker://quay.io/fedora/fedora-coreos | \
             python3 -c "
-          import json, sys
+          import json, sys, re
           tags = json.load(sys.stdin)['Tags']
-          f45 = [t for t in tags if t.startswith('45.')]
+          pattern = re.compile(r'^\d+\.\d+\.\d+\.\d+$')
+          f45 = [t for t in tags if t.startswith('45.') and pattern.match(t)]
           if not f45:
-              raise SystemExit('ERROR: No 45.* tags found in quay.io/fedora/fedora-coreos')
+              raise SystemExit('ERROR: No 45.x.x.x numeric tags found in quay.io/fedora/fedora-coreos')
           latest = sorted(f45, key=lambda t: [int(x) for x in t.split('.')], reverse=True)[0]
           print(latest)
           ")
@@ -35,25 +40,34 @@ jobs:
         id: current_tag
         run: |
           CURRENT=$(grep -oP 'fedora-coreos:\K\S+' Dockerfile)
+          if [[ -z "$CURRENT" ]]; then
+            echo "ERROR: 无法从 Dockerfile 提取当前 tag，请检查 FROM 行格式" >&2
+            exit 1
+          fi
           echo "current=${CURRENT}" >> "$GITHUB_OUTPUT"
 
       - name: 比较版本并更新
         if: steps.get_tag.outputs.latest != steps.current_tag.outputs.current
+        env:
+          CURRENT: ${{ steps.current_tag.outputs.current }}
+          LATEST: ${{ steps.get_tag.outputs.latest }}
         run: |
-          CURRENT="${{ steps.current_tag.outputs.current }}"
-          LATEST="${{ steps.get_tag.outputs.latest }}"
           echo "发现新版本: ${CURRENT} → ${LATEST}"
           sed -i "s|fedora-coreos:${CURRENT}|fedora-coreos:${LATEST}|" Dockerfile
 
       - name: 提交更改
         if: steps.get_tag.outputs.latest != steps.current_tag.outputs.current
+        env:
+          LATEST: ${{ steps.get_tag.outputs.latest }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add Dockerfile
-          git commit -m "Update base image to fedora-coreos:${{ steps.get_tag.outputs.latest }}"
+          git commit -m "Update base image to fedora-coreos:${LATEST}"
           git push
 
       - name: 无更新报告
         if: steps.get_tag.outputs.latest == steps.current_tag.outputs.current
-        run: echo "当前已是最新版本 ${{ steps.current_tag.outputs.current }}，无需更新。"
+        env:
+          CURRENT: ${{ steps.current_tag.outputs.current }}
+        run: echo "当前已是最新版本 ${CURRENT}，无需更新。"
