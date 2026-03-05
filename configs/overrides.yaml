@@ -20,10 +20,10 @@ packages:
   - vulkan-loader 
   - vulkan-tools
   - sing-box
+  - dtc
   - bird
   - bind-utils
   - python3-requests
-  - python3-virtualenvwrapper
   # - python3.13-devel
   - python3-devel
   - zsh

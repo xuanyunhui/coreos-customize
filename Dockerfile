@@ -12,4 +12,16 @@ RUN cat /etc/os-release \
     && rm -rf /var/lib \
     && rpm-ostree cleanup -m \
     && systemctl preset-all \
+    && for kdir in /usr/lib/modules/*/; do \
+         dtbdir="${kdir}dtb"; \
+         if [ -f "${dtbdir}/rockchip/rk3588-orangepi-5-max.dtb" ]; then \
+           ln -sf rockchip/rk3588-orangepi-5-max.dtb "${dtbdir}/xunlong,orangepi-5-max--rockchip,rk3588.dtb"; \
+         fi; \
+         if [ -f "${dtbdir}/rockchip/rk3588-orangepi-5-plus.dtb" ]; then \
+           ln -sf rockchip/rk3588-orangepi-5-plus.dtb "${dtbdir}/xunlong,orangepi-5-plus--rockchip,rk3588.dtb"; \
+         fi; \
+         if [ -f "${dtbdir}/rockchip/rk3588-orangepi-5-ultra.dtb" ]; then \
+           ln -sf rockchip/rk3588-orangepi-5-ultra.dtb "${dtbdir}/xunlong,orangepi-5-ultra--rockchip,rk3588.dtb"; \
+         fi; \
+       done \
     && ostree container commit 
