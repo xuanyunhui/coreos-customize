@@ -9,11 +9,11 @@
 		__overlay__ {
 			wifi {
 				wifi_enable_h: wifi-enable-h {
-					rockchip,pins = <2 21 0 &pcfg_pull_up>;
+					rockchip,pins = <2 21 0 &pcfg_pull_up>; /* GPIO2_C5, RK_FUNC_GPIO */
 				};
 
 				wifi_host_wake_irq: wifi-host-wake-irq {
-					rockchip,pins = <0 8 0 &pcfg_pull_down>;
+					rockchip,pins = <0 8 0 &pcfg_pull_down>; /* GPIO0_B0, RK_FUNC_GPIO */
 				};
 			};
 		};
@@ -26,11 +26,11 @@
 				compatible = "mmc-pwrseq-simple";
 				clock-names = "ext_clock";
 				clocks = <&hym8563>;
-				pinctrl-0 = <&wifi_enable_h>;
 				pinctrl-names = "default";
+				pinctrl-0 = <&wifi_enable_h>;
 				post-power-on-delay-ms = <200>;
 				power-off-delay-us = <5000000>;
-				reset-gpios = <&gpio2 21 1>;
+				reset-gpios = <&gpio2 21 1>; /* GPIO2_C5, ACTIVE_LOW */
 			};
 		};
 	};
@@ -39,6 +39,7 @@
 		target = <&sdio>;
 		__overlay__ {
 			#address-cells = <1>;
+			#size-cells = <0>;
 			bus-width = <4>;
 			cap-sd-highspeed;
 			cap-sdio-irq;
@@ -52,7 +53,6 @@
 			pinctrl-names = "default";
 			pinctrl-0 = <&sdiom0_pins>;
 			sd-uhs-sdr104;
-			#size-cells = <0>;
 			vmmc-supply = <&vcc_3v3_s3>;
 			vqmmc-supply = <&vcc_1v8_s3>;
 			status = "okay";
@@ -61,10 +61,10 @@
 				compatible = "brcm,bcm4329-fmac";
 				reg = <1>;
 				interrupt-parent = <&gpio0>;
-				interrupts = <8 4>;
+				interrupts = <8 4>; /* RK_PB0, IRQ_TYPE_LEVEL_HIGH */
 				interrupt-names = "host-wake";
-				pinctrl-0 = <&wifi_host_wake_irq>;
 				pinctrl-names = "default";
+				pinctrl-0 = <&wifi_host_wake_irq>;
 			};
 		};
 	};
