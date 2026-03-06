@@ -65,12 +65,12 @@ def main():
     # Extract phandle values for all referenced nodes
     hym8563_ph  = find_phandle(dts, ['"haoyu,hym8563"', '"microcrystal,rv8010"'])
     gpio0_ph    = find_phandle(dts, ['gpio@fd8a0000'])
-    gpio2_ph    = find_phandle(dts, ['gpio@fec20000'])
+    gpio2_ph    = find_phandle(dts, ['gpio@fec30000'])
     sdiom0_ph   = find_phandle(dts, ['"sdiom0-pins"'])
-    vcc_3v3_ph  = find_phandle(dts, ['"vcc-3v3-s3"'])
-    vcc_1v8_ph  = find_phandle(dts, ['"vcc-1v8-s3"'])
-    pcfg_up_ph  = find_phandle(dts, ['"pcfg-pull-up"'])
-    pcfg_dn_ph  = find_phandle(dts, ['"pcfg-pull-down"'])
+    vcc_3v3_ph  = find_phandle(dts, ['"vcc_3v3_s3"'])
+    vcc_1v8_ph  = find_phandle(dts, ['"vcc_1v8_s3"'])
+    pcfg_up_ph  = find_phandle(dts, ['pcfg-pull-up {'])
+    pcfg_dn_ph  = find_phandle(dts, ['pcfg-pull-down {'])
 
     # Check required phandles
     required = {
