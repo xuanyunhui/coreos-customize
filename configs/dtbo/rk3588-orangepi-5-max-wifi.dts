@@ -1,0 +1,74 @@
+/dts-v1/;
+/plugin/;
+
+/* Documentation only - actual DTB patching is performed by patch-dtb-wifi.py.
+ * This file serves as a reference for the Wi-Fi configuration intent. */
+
+/ {
+	compatible = "xunlong,orangepi-5-max", "rockchip,rk3588";
+
+	fragment@0 {
+		target = <&pinctrl>;
+		__overlay__ {
+			wifi {
+				wifi_enable_h: wifi-enable-h {
+					rockchip,pins = <2 21 0 &pcfg_pull_up>; /* GPIO2_C5, RK_FUNC_GPIO */
+				};
+
+				wifi_host_wake_irq: wifi-host-wake-irq {
+					rockchip,pins = <0 8 0 &pcfg_pull_down>; /* GPIO0_B0, RK_FUNC_GPIO */
+				};
+			};
+		};
+	};
+
+	fragment@1 {
+		target-path = "/";
+		__overlay__ {
+			sdio_pwrseq: sdio-pwrseq {
+				compatible = "mmc-pwrseq-simple";
+				clock-names = "ext_clock";
+				clocks = <&hym8563>;
+				pinctrl-names = "default";
+				pinctrl-0 = <&wifi_enable_h>;
+				post-power-on-delay-ms = <200>;
+				power-off-delay-us = <5000000>;
+				reset-gpios = <&gpio2 21 1>; /* GPIO2_C5, ACTIVE_LOW */
+			};
+		};
+	};
+
+	fragment@2 {
+		target = <&sdio>;
+		__overlay__ {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			bus-width = <4>;
+			cap-sd-highspeed;
+			cap-sdio-irq;
+			disable-wp;
+			keep-power-in-suspend;
+			max-frequency = <150000000>;
+			mmc-pwrseq = <&sdio_pwrseq>;
+			non-removable;
+			no-mmc;
+			no-sd;
+			pinctrl-names = "default";
+			pinctrl-0 = <&sdiom0_pins>;
+			sd-uhs-sdr104;
+			vmmc-supply = <&vcc_3v3_s3>;
+			vqmmc-supply = <&vcc_1v8_s3>;
+			status = "okay";
+
+			brcmf: wifi@1 {
+				compatible = "brcm,bcm4329-fmac";
+				reg = <1>;
+				interrupt-parent = <&gpio0>;
+				interrupts = <8 4>; /* RK_PB0, IRQ_TYPE_LEVEL_HIGH */
+				interrupt-names = "host-wake";
+				pinctrl-names = "default";
+				pinctrl-0 = <&wifi_host_wake_irq>;
+			};
+		};
+	};
+};
