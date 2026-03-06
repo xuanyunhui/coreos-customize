@@ -39,6 +39,5 @@ packages:
   - unzip
   - zip
   - ninja-build
-  - chromium
   - gtk3-devel
   - android-tools
