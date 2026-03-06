@@ -16,6 +16,7 @@ packages:
   - screen
   - tftp-server
   - tree
+  - mesa-libTeflon
   - mesa-vulkan-drivers
   - vulkan-loader 
   - vulkan-tools
