@@ -41,7 +41,10 @@ RUN cat /etc/os-release \
     && for kdir in /usr/lib/modules/*/; do \
          dtb="${kdir}dtb/rockchip/rk3588-orangepi-5-max.dtb"; \
          if [ -f "${dtb}" ]; then \
-           fdtoverlay -i "${dtb}" -o "${dtb}" \
+           dtc -I dtb -O dts "${dtb}" \
+             | dtc -@ -I dts -O dtb -o "${dtb}.sym" \
+             && mv "${dtb}.sym" "${dtb}" \
+             && fdtoverlay -i "${dtb}" -o "${dtb}" \
                       /tmp/rk3588-orangepi-5-max-wifi.dtbo \
              && echo "Applied Wi-Fi DTB overlay to ${dtb}"; \
          fi; \
