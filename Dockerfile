@@ -26,13 +26,13 @@ RUN cat /etc/os-release \
        done \
     && FIRMWARE_BASE="https://raw.githubusercontent.com/orangepi-xunlong/firmware/refs/heads/master" \
     && mkdir -p /usr/lib/firmware/brcm \
-    && curl -fL "${FIRMWARE_BASE}/SYN43711A0.hcd" \
+    && curl -fL --max-time 60 "${FIRMWARE_BASE}/SYN43711A0.hcd" \
          -o /usr/lib/firmware/brcm/SYN43711A0.hcd \
     && ln -sf SYN43711A0.hcd /usr/lib/firmware/brcm/BCM.xunlong,orangepi-5-max.hcd \
-    && curl -fL "${FIRMWARE_BASE}/fw_syn43711a0_sdio.bin" \
+    && curl -fL --max-time 60 "${FIRMWARE_BASE}/fw_syn43711a0_sdio.bin" \
          -o /usr/lib/firmware/brcm/brcmfmac43711-sdio.bin \
-    && curl -fL "${FIRMWARE_BASE}/clm_syn43711a0.blob" \
+    && curl -fL --max-time 60 "${FIRMWARE_BASE}/clm_syn43711a0.blob" \
          -o /usr/lib/firmware/brcm/brcmfmac43711-sdio.clm_blob \
-    && curl -fL "${FIRMWARE_BASE}/nvram_ap6611s.txt" \
+    && curl -fL --max-time 60 "${FIRMWARE_BASE}/nvram_ap6611s.txt" \
          -o "/usr/lib/firmware/brcm/brcmfmac43711-sdio.xunlong,orangepi-5-max.txt" \
     && ostree container commit 
