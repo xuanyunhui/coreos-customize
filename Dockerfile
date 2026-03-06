@@ -41,7 +41,8 @@ RUN cat /etc/os-release \
          if [ -f "${dtb}" ]; then \
            python3 /tmp/patch-dtb-wifi.py "${dtb}" "${dtb}.patched" \
              && mv "${dtb}.patched" "${dtb}" \
-             && echo "Applied Wi-Fi patch to ${dtb}"; \
+             && echo "Applied Wi-Fi patch to ${dtb}" \
+             || exit 1; \
          fi; \
        done \
     && rm /tmp/patch-dtb-wifi.py \

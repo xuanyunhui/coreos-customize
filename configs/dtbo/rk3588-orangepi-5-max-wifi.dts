@@ -1,6 +1,9 @@
 /dts-v1/;
 /plugin/;
 
+/* Documentation only - actual DTB patching is performed by patch-dtb-wifi.py.
+ * This file serves as a reference for the Wi-Fi configuration intent. */
+
 / {
 	compatible = "xunlong,orangepi-5-max", "rockchip,rk3588";
 
