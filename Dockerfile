@@ -3,7 +3,7 @@ FROM quay.io/fedora/fedora-coreos:44.20260301.92.1
 # 添加配置文件
 ADD configs/overrides.yaml /etc/rpm-ostree/origin.d/overrides.yaml
 ADD configs/repos/sing-box.repo /etc/yum.repos.d/sing-box.repo
-ADD configs/dtbo/rk3588-orangepi-5-max-wifi.dts /tmp/rk3588-orangepi-5-max-wifi.dts
+ADD configs/dtbo/patch-dtb-wifi.py /tmp/patch-dtb-wifi.py
 
 # 执行系统重建
 RUN cat /etc/os-release \
@@ -36,19 +36,13 @@ RUN cat /etc/os-release \
          -o /usr/lib/firmware/brcm/brcmfmac43711-sdio.clm_blob \
     && curl -fL --max-time 60 "${FIRMWARE_BASE}/nvram_ap6611s.txt" \
          -o "/usr/lib/firmware/brcm/brcmfmac43711-sdio.xunlong,orangepi-5-max.txt" \
-    && dtc -@ -I dts -O dtb -o /tmp/rk3588-orangepi-5-max-wifi.dtbo \
-         /tmp/rk3588-orangepi-5-max-wifi.dts \
     && for kdir in /usr/lib/modules/*/; do \
          dtb="${kdir}dtb/rockchip/rk3588-orangepi-5-max.dtb"; \
          if [ -f "${dtb}" ]; then \
-           dtc -I dtb -O dts "${dtb}" \
-             | dtc -@ -I dts -O dtb -o "${dtb}.sym" \
-             && mv "${dtb}.sym" "${dtb}" \
-             && fdtoverlay -i "${dtb}" -o "${dtb}" \
-                      /tmp/rk3588-orangepi-5-max-wifi.dtbo \
-             && echo "Applied Wi-Fi DTB overlay to ${dtb}"; \
+           python3 /tmp/patch-dtb-wifi.py "${dtb}" "${dtb}.patched" \
+             && mv "${dtb}.patched" "${dtb}" \
+             && echo "Applied Wi-Fi patch to ${dtb}"; \
          fi; \
        done \
-    && rm /tmp/rk3588-orangepi-5-max-wifi.dts \
-          /tmp/rk3588-orangepi-5-max-wifi.dtbo \
+    && rm /tmp/patch-dtb-wifi.py \
     && ostree container commit 
