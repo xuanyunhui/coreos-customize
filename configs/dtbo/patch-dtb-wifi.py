@@ -104,11 +104,18 @@ def main():
     # Find SDIO controller path
     sdio_path = find_sdio_path(dts)
 
+    # Find pinctrl path
+    pinctrl_path = '/pinctrl'  # default for RK3588 boards
+    m = re.search(r'\bpinctrl(@[0-9a-f]+)?\s*\{', dts)
+    if m and m.group(1):
+        pinctrl_path = f'/pinctrl{m.group(1)}'
+
     print(f"Phandles: hym8563={hex(hym8563_ph)} gpio0={hex(gpio0_ph)} gpio2={hex(gpio2_ph)}", file=sys.stderr)
     print(f"          vcc3v3={hex(vcc_3v3_ph)} vcc1v8={hex(vcc_1v8_ph)} sdiom0={hex(sdiom0_ph)}", file=sys.stderr)
     print(f"          pcfg_up={hex(pcfg_up_ph)} pcfg_dn={hex(pcfg_dn_ph)}", file=sys.stderr)
     print(f"New phandles: pwrseq={hex(pwrseq_ph)} wifi_en={hex(wifi_en_ph)} wifi_irq={hex(wifi_irq_ph)}", file=sys.stderr)
     print(f"SDIO path: {sdio_path}", file=sys.stderr)
+    print(f"Pinctrl path: {pinctrl_path}", file=sys.stderr)
 
     # Generate DTS additions
     additions = f"""
@@ -127,7 +134,7 @@ def main():
 \t}};
 }};
 
-&{{/pinctrl@fd5f8000}} {{
+&{{{pinctrl_path}}} {{
 \twifi {{
 \t\twifi-enable-h {{
 \t\t\tphandle = <{wifi_en_ph:#x}>;
