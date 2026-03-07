@@ -8,7 +8,7 @@ override-remove:
   - nano-default-editor
 packages:
   - bluez
-  = tmux
+  - tmux
   - container-selinux
   - podman-docker
   - brcmfmac-firmware
