@@ -45,3 +45,4 @@ packages:
   - ninja-build
   - gtk3-devel
   - android-tools
+  - ImageMagick
