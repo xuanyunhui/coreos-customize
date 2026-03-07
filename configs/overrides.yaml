@@ -7,6 +7,7 @@ override-remove:
   - nano
   - nano-default-editor
 packages:
+  - bluez
   - container-selinux
   - podman-docker
   - brcmfmac-firmware
