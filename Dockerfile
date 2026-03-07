@@ -34,4 +34,16 @@ RUN cat /etc/os-release \
          fi; \
        done \
     && rm /tmp/patch-dtb-wifi.py \
+    # Mali GPU OpenCL 驱动 (RK3588 / Mali-G610)
+    && MALI_BASE="https://github.com/JeffyCN/mirrors/raw/libmali" \
+    && curl -fL --max-time 120 \
+         "${MALI_BASE}/lib/aarch64-linux-gnu/libmali-valhall-g610-g6p0-x11-wayland-gbm.so" \
+         -o /usr/lib64/libmali-valhall-g610-g6p0-x11-wayland-gbm.so \
+    && chmod 755 /usr/lib64/libmali-valhall-g610-g6p0-x11-wayland-gbm.so \
+    && curl -fL --max-time 60 \
+         "${MALI_BASE}/firmware/g610/mali_csffw.bin" \
+         -o /usr/lib/firmware/mali_csffw.bin \
+    && echo "/usr/lib64/libmali-valhall-g610-g6p0-x11-wayland-gbm.so" \
+         > /etc/OpenCL/vendors/mali.icd \
+    && ldconfig \
     && ostree container commit 

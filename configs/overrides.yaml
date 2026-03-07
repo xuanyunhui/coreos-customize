@@ -46,3 +46,7 @@ packages:
   - gtk3-devel
   - android-tools
   - ImageMagick
+  # OpenCL 支持 (配合 Mali GPU blob 驱动)
+  - ocl-icd
+  - opencl-filesystem
+  - clinfo
