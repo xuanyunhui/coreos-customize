@@ -3,6 +3,7 @@ FROM quay.io/fedora/fedora-coreos:44.20260301.92.1
 # 添加配置文件
 ADD configs/overrides.yaml /etc/rpm-ostree/origin.d/overrides.yaml
 ADD configs/repos/sing-box.repo /etc/yum.repos.d/sing-box.repo
+ADD configs/repos/yunhui-imagemagick-opencl.repo /etc/yum.repos.d/yunhui-imagemagick-opencl.repo
 ADD configs/dtbo/patch-dtb-wifi.py /tmp/patch-dtb-wifi.py
 
 # 执行系统重建
