@@ -50,3 +50,7 @@ packages:
   - ocl-icd
   - opencl-filesystem
   - clinfo
+  - wqy-bitmap-fonts
+  - wqy-microhei-fonts
+  - wqy-unibit-fonts
+  - wqy-zenhei-fonts
