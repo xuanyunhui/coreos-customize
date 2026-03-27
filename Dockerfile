@@ -11,16 +11,7 @@ ADD configs/dtbo/patch-dtb-wifi.py /tmp/patch-dtb-wifi.py
 RUN cat /etc/os-release \
     && rpm-ostree --version \
     && mkdir -p /var/lib/alternatives \
-    && dnf5 download \
-         --destdir=/tmp/rpm-overrides \
-         --arch=aarch64 --arch=noarch \
-         libgcc libstdc++ dbus-libs \
-         podman glib2 glibc glibc-common glibc-minimal-langpack glibc-gconv-extra \
-         elfutils-libelf elfutils-libs elfutils-debuginfod-client \
-    && rpm-ostree override replace /tmp/rpm-overrides/*.rpm \
-    && rm -rf /var/cache/libdnf5 \
     && rpm-ostree ex rebuild \
-    && rm -rf /tmp/rpm-overrides \
     && rm -rf /var/lib \
     && rpm-ostree cleanup -m \
     && systemctl preset-all \
