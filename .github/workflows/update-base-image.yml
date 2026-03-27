@@ -23,7 +23,7 @@ jobs:
       - name: 获取最新支持 arm64 的 tag
         id: get_tag
         run: |
-          FVER=$(grep -oP 'fedora-coreos:\K\d+' Dockerfile)
+          export FVER=$(grep -oP 'fedora-coreos:\K\d+' Dockerfile)
           LATEST=$(skopeo list-tags docker://quay.io/fedora/fedora-coreos | \
             python3 -c "
           import json, sys, re, subprocess, os
@@ -53,7 +53,7 @@ jobs:
                   print(tag)
                   sys.exit(0)
           raise SystemExit(f'ERROR: No F{fver} arm64-compatible tag found')
-          " FVER="$FVER")
+          ")
           echo "latest=${LATEST}" >> "$GITHUB_OUTPUT"
 
       - name: 获取当前 Dockerfile tag
