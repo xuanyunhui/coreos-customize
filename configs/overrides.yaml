@@ -44,7 +44,7 @@ packages:
   - ninja-build
   - gtk3-devel
   - android-tools
-  - ImageMagick
+
   - gh
   # OpenCL 支持 (配合 Mali GPU blob 驱动)
   - ocl-icd
