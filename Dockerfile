@@ -15,6 +15,8 @@ RUN cat /etc/os-release \
          --destdir=/tmp/rpm-overrides \
          --arch=aarch64 --arch=noarch \
          libgcc libstdc++ dbus-libs \
+         podman glib2 glibc glibc-common glibc-minimal-langpack \
+         elfutils-libelf elfutils-libs elfutils-debuginfod-client \
     && rpm-ostree override replace /tmp/rpm-overrides/*.rpm \
     && rm -rf /var/cache/libdnf5 \
     && rpm-ostree ex rebuild \
