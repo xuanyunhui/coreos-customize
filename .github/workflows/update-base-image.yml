@@ -2,7 +2,7 @@ name: 自动更新基础镜像 Tag
 
 on:
   schedule:
-    - cron: '0 0 * * 1'  # 每周一 UTC 00:00
+    - cron: '0 0 * * 1'  # 每周一 UTC 00:00 检查 next 通道
   workflow_dispatch:       # 支持手动触发
 
 concurrency:
@@ -29,7 +29,8 @@ jobs:
           import json, sys, re, subprocess, os
           fver = os.environ['FVER']
           tags = json.load(sys.stdin)['Tags']
-          pattern = re.compile(rf'^{re.escape(fver)}\.\d+\.\d+\.\d+$')
+          # next 通道 tag 格式: FVER.YYYYMMDD.1.PATCH (第三段为 1)
+          pattern = re.compile(rf'^{re.escape(fver)}\.\d+\.1\.\d+$')
           candidates = sorted(
               [t for t in tags if pattern.match(t)],
               key=lambda t: [int(x) for x in t.split('.')],
@@ -52,7 +53,7 @@ jobs:
               if 'arm64' in archs:
                   print(tag)
                   sys.exit(0)
-          raise SystemExit(f'ERROR: No F{fver} arm64-compatible tag found')
+          raise SystemExit(f'ERROR: No F{fver} next channel arm64-compatible tag found')
           ")
           echo "latest=${LATEST}" >> "$GITHUB_OUTPUT"
 
