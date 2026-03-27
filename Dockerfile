@@ -11,6 +11,7 @@ ADD configs/dtbo/patch-dtb-wifi.py /tmp/patch-dtb-wifi.py
 RUN cat /etc/os-release \
     && rpm-ostree --version \
     && mkdir -p /var/lib/alternatives \
+    && rpm-ostree update \
     && rpm-ostree ex rebuild \
     && rm -rf /var/lib \
     && rpm-ostree cleanup -m \
