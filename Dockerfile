@@ -5,7 +5,6 @@ ADD configs/overrides.yaml /etc/rpm-ostree/origin.d/overrides.yaml
 ADD configs/repos/sing-box.repo /etc/yum.repos.d/sing-box.repo
 
 ADD configs/repos/gh-cli.repo /etc/yum.repos.d/gh-cli.repo
-ADD configs/dtbo/patch-dtb-wifi.py /tmp/patch-dtb-wifi.py
 
 # 执行系统重建
 RUN cat /etc/os-release \
@@ -16,25 +15,4 @@ RUN cat /etc/os-release \
     && rm -rf /var/lib \
     && rpm-ostree cleanup -m \
     && systemctl preset-all \
-    && FIRMWARE_BASE="https://raw.githubusercontent.com/orangepi-xunlong/firmware/refs/heads/master" \
-    && mkdir -p /usr/lib/firmware/brcm \
-    && curl -fL --max-time 60 "${FIRMWARE_BASE}/SYN43711A0.hcd" \
-         -o /usr/lib/firmware/brcm/SYN43711A0.hcd \
-    && ln -sf SYN43711A0.hcd /usr/lib/firmware/brcm/BCM.xunlong,orangepi-5-max.hcd \
-    && curl -fL --max-time 60 "${FIRMWARE_BASE}/fw_syn43711a0_sdio.bin" \
-         -o /usr/lib/firmware/brcm/brcmfmac43711-sdio.bin \
-    && curl -fL --max-time 60 "${FIRMWARE_BASE}/clm_syn43711a0.blob" \
-         -o /usr/lib/firmware/brcm/brcmfmac43711-sdio.clm_blob \
-    && curl -fL --max-time 60 "${FIRMWARE_BASE}/nvram_ap6611s.txt" \
-         -o "/usr/lib/firmware/brcm/brcmfmac43711-sdio.xunlong,orangepi-5-max.txt" \
-    && for kdir in /usr/lib/modules/*/; do \
-         dtb="${kdir}dtb/rockchip/rk3588-orangepi-5-max.dtb"; \
-         if [ -f "${dtb}" ]; then \
-           python3 /tmp/patch-dtb-wifi.py "${dtb}" "${dtb}.patched" \
-             && mv "${dtb}.patched" "${dtb}" \
-             && echo "Applied Wi-Fi patch to ${dtb}" \
-             || exit 1; \
-         fi; \
-       done \
-    && rm /tmp/patch-dtb-wifi.py \
     && ostree container commit
