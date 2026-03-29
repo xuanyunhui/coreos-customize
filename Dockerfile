@@ -12,6 +12,7 @@ RUN cat /etc/os-release \
     && mkdir -p /var/lib/alternatives \
     && dnf5 upgrade -y \
     && rpm-ostree ex rebuild \
+    && find /usr/lib/modules/*/dtb -mindepth 1 -maxdepth 1 -type d ! -name rockchip -exec rm -rf {} + \
     && rm -rf /var/lib \
     && rpm-ostree cleanup -m \
     && systemctl preset-all \
