@@ -49,7 +49,4 @@ packages:
 
   - git-lfs
   - gh
-  # OpenCL 支持 (配合 Mali GPU blob 驱动)
-  - ocl-icd
-  - opencl-filesystem
-  - clinfo
+  - poppler-utils
