@@ -9,6 +9,8 @@ override-remove:
 packages:
   - bluez
   - tmux
+  - tmux-powerline
+  - tmux-top
   - container-selinux
   - podman-docker
   - pciutils
