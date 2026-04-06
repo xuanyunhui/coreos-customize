@@ -10,7 +10,7 @@ ADD configs/repos/gh-cli.repo /etc/yum.repos.d/gh-cli.repo
 RUN cat /etc/os-release \
     && rpm-ostree --version \
     && mkdir -p /var/lib/alternatives \
-    && rpm-ostree ex rebuild --setopt=best=false --setopt=skip_if_unavailable=true \
+    && rpm-ostree ex rebuild \
     && find /usr/lib/modules/*/dtb -mindepth 1 -maxdepth 1 -type d ! -name rockchip -exec rm -rf {} + \
     && rm -rf /var/lib \
     && rpm-ostree cleanup -m \

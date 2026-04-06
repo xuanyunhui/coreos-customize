@@ -44,7 +44,7 @@ packages:
   - unzip
   - zip
   - ninja-build
-  - gtk3-devel
+  # - gtk3-devel
   - android-tools
 
   - git-lfs
